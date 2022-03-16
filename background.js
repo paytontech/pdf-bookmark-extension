@@ -1,3 +1,5 @@
+var urlThing = ""
+
 function getURL() {
   chrome.tabs.query({
     active: true,
@@ -6,7 +8,7 @@ function getURL() {
     // and use that tab to fill in out title and url
     var tab = tabs[0];
     console.log(tab.url);
-    return tab;
+    urlThing = String(tab.url)
 });
 readURL()
 }
@@ -15,8 +17,21 @@ chrome.tabs.onUpdated.addListener(function() {
 })
 
 function readURL() {
-  if (getURL.url.contains(".pdf")) {
+  if (urlThing.includes(".pdf")) {
     console.log("pdf")
   }
 }
 
+var bookmarkedPages = [{"url": "pageNum"}]
+
+
+function savePage(pageNumber) {
+        if (urlThing.includes(".pdf")) {
+            bookmarkedPages.push({"url": urlThing, "pageNum": pageNumber})
+            chrome.storage.local.set({bookmarks: bookmarkedPages}, function() {
+                console.log("bookmarked: " + String(bookmarkedPages))
+            })
+        } else {
+            console.log("not a pdf")
+        }
+}
